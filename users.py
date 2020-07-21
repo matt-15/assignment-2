@@ -1,3 +1,6 @@
+import os
+import hashlib
+import binascii
 from order import Cart
 import load_helper as dat_loader
 
@@ -19,15 +22,27 @@ class User:
     self.email = email
     self.contact_number = contact
     self.last_name = last_name
-    self.__password = password
+    salt = hashlib.sha256(os.urandom(60)).hexdigest().encode("ascii")
+    p_hash = hashlib.pbkdf2_hmac("sha512", password.encode("utf-8"),
+                                  salt, 100000)
+    p_hash = binascii.hexlify(p_hash)
+    self.__password = (salt + p_hash).decode("ascii")
     self.gender = gender
     self.is_authenticated = False
 
   def Change_password(self, new_pass):
-    self.__password = new_pass
+    salt = hashlib.sha256(os.urandom(60)).hexdigest().encode("ascii")
+    p_hash = hashlib.pbkdf2_hmac("sha512", new_pass.encode("utf-8"), salt, 100000)
+    p_hash = binascii.hexlify(p_hash)
+    self.__password = (salt + p_hash).decode("ascii")
 
   def Check_password(self, password):
-    if self.__password == password:
+    salt = self.__password[:64]
+    stored_password = self.__password[64:]
+    p_hash = hashlib.pbkdf2_hmac("sha512", password.encode("utf-8"), salt.encode("ascii"), 100000)
+    p_hash = binascii.hexlify(p_hash).decode("ascii")
+    if p_hash == stored_password:
+      self.is_authenticated = True
       return True
     else:
       return False

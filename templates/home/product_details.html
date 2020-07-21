@@ -28,17 +28,17 @@
     <div class="row">
         <div class="col-sm-6">
         <div class="eclectic-card">
-            <div class="eclectic-card-image"><img class="card-img" src="{{ product.pic_link| safe }}" alt="product picture"></div>
+            <div class="eclectic-card-image"><img class="card-img" src="{{ product.pic_link }}" alt="product picture"></div>
                 <div class="eclectic-card-content">
-                    <h2 class="eclectic-card-title text-center">{{ product.get_title()| safe }}</h2>
+                    <h2 class="eclectic-card-title text-center">{{ product.get_title() }}</h2>
                 </div>
         </div>
         </div>
         <div class="col-sm-6">
             <div class="eclectic-product-description">
-                <p class="description"><span style="font-weight: 800; font-size: 1.2em;">Description:</span> <br> {{ product.get_description()| safe }}</p>
+                <p class="description"><span style="font-weight: 800; font-size: 1.2em;">Description:</span> <br> {{ product.get_description() }}</p>
                 <br>
-                <p class="retail-price">Retail price: <span style="color: MediumBlue ;">${{ product.retail_price| safe }}</span></p>
+                <p class="retail-price">Retail price: <span style="color: MediumBlue ;">${{ product.retail_price }}</span></p>
                 <br>
                 <a href="/login" class="product-detail-btn">Login to Purchase</a>
             </div>

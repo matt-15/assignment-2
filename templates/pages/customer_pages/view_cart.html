@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Eclectic Cart{% endblock %}
 {% set active_page = "cart" %}
-
 {% block scripts %}
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{{ url_for('static' , filename='js/cart.js') }}"></script>
-<script src="{{ url_for('static' , filename='js/chatbot.js') }}"></script>
 {% endblock %}
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
-{% endblock %}
-
+{% block css %}{% endblock %}
 
 {% block navbar %}
 <!-- Logic to check logged in user and display relevant dashboard-->
@@ -84,5 +79,4 @@
       {% endif %}
     </div>
 </div>
-{% include 'includes/chatbot.html' %}
 {% endblock %}

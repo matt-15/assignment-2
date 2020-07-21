@@ -30,6 +30,9 @@
           <div class="eclectic-table">
                 <div class="eclectic-row eclectic-table-header">
                   <div class="eclectic-cell">
+                    Product ID
+                  </div>
+                  <div class="eclectic-cell">
                     Product Name
                   </div>
                   <div class="eclectic-cell">
@@ -48,6 +51,9 @@
 
               {% for product in products %}
                 <div class="eclectic-row">
+                  <div class="eclectic-cell" data-title="id">
+                    {{ product.get_id() }}
+                  </div>
                   <div class="eclectic-cell" data-title="name">
                     {{ product.get_title() }}
                   </div>

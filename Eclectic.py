@@ -1,4 +1,4 @@
-from flask import request, redirect, jsonify, make_response, Response,escape
+from flask import request, redirect, jsonify, make_response, Response
 from flask import Flask, render_template, send_file, abort, url_for
 from send_mail import Mail
 import report
@@ -26,12 +26,11 @@ app.config["STRIPE_SECRET"] = "sk_test_dc5NYOqosrlmJqpC8wS3A4XK00PRPwGUnH"
 app.config["STRIPE_PUBLIC"] = "pk_test_TTKhfH0AEyWBHKxIRoiL24HK009XQKg3y2"
 
 
-
-
 # Routing for Home Page
 @app.route("/")
 def home():
   return render_template("home/home.html")
+
 
 # Routing for product page before login
 @app.route("/products/")
@@ -59,13 +58,13 @@ def get_file(id):
   for x in file_list:
     if x.get_id() == id and isinstance(x, Photo):
       return send_file(x.get_file_path())
-    elif x.get_id() == id and  isinstance(x, Attached_File):
+    elif x.get_id() == id and is_authenticated(request) and isinstance(x, Attached_File):
       user = get_user(request)
       if x.get_uploaded_by().get_id() == user.get_id() or isinstance(user, Staff):
         return send_file(x.get_file_path())
       else:
         return abort(403)
-    elif x.get_id() == id and isinstance(x, Attached_File):
+    elif x.get_id() == id and not is_authenticated(request) and isinstance(x, Attached_File):
       return abort(403)
     else:
       counter += 1
@@ -86,6 +85,9 @@ def product_detail(id):
 # Routing for login page
 @app.route("/login/", methods=["GET", "POST"])
 def login():
+  if is_authenticated(request):
+    return redirect("/dashboard/")
+  else:
     form = LoginForm()
     if request.method == "GET":
       form.username.data = ""
@@ -250,7 +252,7 @@ def forget():
         new_list.append(p_token)
         dat_loader.write_data("Tokens", new_list, False)
     return redirect("/login/")
-  elif request.args.get("auth") is None:
+  elif request.args.get("auth") is None and not is_authenticated(request):
     return render_template("home/forget_password.html", form=form_forget)
   elif form_reset.validate_on_submit():
     user_id = int(form_reset.id.data)
@@ -291,15 +293,18 @@ def forget():
 # will have logic to decide where to redirect users based on user type. Staff/Customer
 @app.route("/dashboard/")
 def after_login():
-    if is_staff(request):
+    if is_authenticated(request) and is_staff(request):
         return redirect("/dashboard/report/")
-    else:
+    elif is_authenticated(request) and not is_staff(request):
         return redirect("/dashboard/products/")
+    else:
+        return redirect("/login/")
 
 
 # Routing for product page after login
 @app.route("/dashboard/products/")  # - Customer
 def dashboard_view_products():
+  if is_authenticated(request) and not is_staff(request):
     refresh_session(request)
     query = request.args.get("search")
     if query is None:
@@ -314,32 +319,42 @@ def dashboard_view_products():
           search_results.append(product)
       return render_template("pages/customer_pages/search_products.html", products=search_results,
                              user=get_user(request), staff=is_staff(request))
+  else:
+    return redirect("/login/")
 
 
 # Routing for product details page after login
 @app.route("/dashboard/products/<int:id>/")  # - Customer
 def dashboard_view_products_details(id):
+  if is_authenticated(request) and not is_staff(request):
     refresh_session(request)
     products = dat_loader.load_data("Products")["data"]
     for product in products:
       if product.get_id() == id:
         return render_template("pages/customer_pages/products_details.html", product=product,
                                user=get_user(request), staff=is_staff(request))
+    return abort(404)
 
 
 # Routing for user management - staff
 @app.route("/dashboard/users/")
 def user_management():
+  if is_authenticated(request) and is_staff(request):
     user_list = dat_loader.load_data("Users")["data"]
     results = []
     for user in user_list:
       if isinstance(user, Customer):
         results.append(user)
     return render_template("pages/staff_pages/user_management.html", users=results, user=get_user(request), staff=is_staff(request))
+  elif is_authenticated(request) and not is_staff(request):
+    return abort(403)
+  else:
+    return redirect("/login/")
 
 # Supporting user management route - deactivate
 @app.route("/api-service/user/deactivate/", methods=["POST"])
 def user_deactivate():
+  if is_authenticated(request) and is_staff(request):
     user_list = dat_loader.load_data("Users")["data"]
     dat = request.get_json(force=True)
     for user in user_list:
@@ -347,15 +362,23 @@ def user_deactivate():
         user_list.remove(user)
     dat_loader.write_data("Users", user_list)
     return jsonify({"success":"true"})
+  elif is_authenticated(request) and not is_staff(request):
+    return abort(403)
+  else:
+    return redirect("/login/")
 
 # Routing for account management - customer/staff
 @app.route("/dashboard/account/")
 def user_account_management():
+  if is_authenticated(request):
     return render_template("pages/account_settings.html", staff=is_staff(request), user=get_user(request))
+  else:
+    return redirect("/login/")
 
 # Supporting account route - update phone number
 @app.route("/api-service/account/update/number/", methods=["POST"])
 def user_account_update_number():
+  if is_authenticated(request):
     dat = request.get_json(force=True)
     c_user = get_user(request)
     user_list = dat_loader.load_data("Users")["data"]
@@ -377,10 +400,13 @@ def user_account_update_number():
         counter += 1
     if counter == len(user_list):
       return abort(404)
+  else:
+    return abort(403)
 
 # Supporting account route - update phone number
 @app.route("/api-service/account/update/email/", methods=["POST"])
 def user_account_update_email():
+  if is_authenticated(request):
     dat = request.get_json(force=True)
     c_user = get_user(request)
     user_list = dat_loader.load_data("Users")["data"]
@@ -403,10 +429,13 @@ def user_account_update_email():
         counter += 1
     if counter == len(user_list):
       return abort(404)
+  else:
+    return abort(403)
 
 # Routing for account management password - customer/staff
 @app.route("/dashboard/account/change-password/", methods=["GET", "POST"])
 def customer_account_manage_pass():
+  if is_authenticated(request):
     form = AccountPasswordChange()
     if request.method == "GET":
       return render_template("pages/account_settings_password.html", staff=is_staff(request), user=get_user(request), form=form)
@@ -418,10 +447,13 @@ def customer_account_manage_pass():
           user.Change_password(form.n_pass.data)
       dat_loader.write_data("Users", user_list, False)
       return redirect("/dashboard/account/")
+  else:
+    return redirect("/login/")
 
 # Supporting account route - validate password
 @app.route("/api-service/account/validate/password/", methods=["POST"])
 def user_account_validate_password():
+  if is_authenticated(request):
     dat = request.get_json(force=True)
     c_user = get_user(request)
     user_list = dat_loader.load_data("Users")["data"]
@@ -438,12 +470,14 @@ def user_account_validate_password():
         counter += 1
     if counter == len(user_list):
       return abort(404)
+  else:
+    return abort(403)
 
 
 # Routing for account management address - customer
 @app.route("/dashboard/account/address/", methods=["POST", "GET"])
 def customer_account_manage_address():
-  if not is_staff(request):
+  if is_authenticated(request) and not is_staff(request):
     form = AccountAddressChange()
     if request.method == "GET":
       user = get_user(request)
@@ -462,19 +496,27 @@ def customer_account_manage_address():
       return redirect("/dashboard/account/")
     else:
       return redirect("/dashboard/account/")
+  elif is_authenticated(request) and is_staff(request):
+    return abort(403)
+  else:
+    return redirect("/login/")
 
 
 # Routing for inventory management - staff
 @app.route("/dashboard/inventory/")
 def view_inventory():
+  if is_authenticated(request) and is_staff(request):
     products = dat_loader.load_data("Products")["data"]
     return render_template("pages/staff_pages/view_inventory.html", products=products, count=len(products),
                            user=get_user(request), staff=is_staff(request))
+  else:
+    return redirect("/login/")
 
 
 # Routing for inventory management add - staff
 @app.route("/dashboard/inventory/add/", methods=["GET", "POST"])
 def add_inventory():
+  if is_authenticated(request) and is_staff(request):
     form = CreateProduct()
     upload_image = FileUploadForm()
     if request.method == "GET":
@@ -490,11 +532,13 @@ def add_inventory():
       products.append(new_product)
       dat_loader.write_data("Products", products)
       return redirect("/dashboard/inventory/")
-
+  else:
+    return redirect("/login/")
 
 
 @app.route("/api-service/inventory/validate/", methods=["POST"])
 def inventory_validate():
+  if is_authenticated(request) and is_staff(request):
     dat = request.json
     product_list = dat_loader.load_data("Products")["data"]
     p_list = []
@@ -504,11 +548,14 @@ def inventory_validate():
       return jsonify({"success":"false", "message":"New product's name matches existing product"})
     else:
       return jsonify({"success":"true"})
+  else:
+    return abort(403)
 
 
 # Routing for inventory management update - staff
 @app.route("/dashboard/inventory/update/<int:id>/", methods=["GET", "POST"])
 def inventory_change(id):
+  if is_authenticated(request) and is_staff(request):
     update_form = CreateProduct()
     if request.method == "POST":
       products = dat_loader.load_data("Products")["data"]
@@ -532,11 +579,14 @@ def inventory_change(id):
           update_form.stock.data = product.stock
           return render_template("pages/staff_pages/update_inventory.html", product=product, form=update_form,
                                  user=get_user(request), staff=is_staff(request))
+  else:
+    return redirect("/login/")
 
 
 # Delete Product
 @app.route("/dashboard/inventory/delete/<int:id>/", methods=["POST"])
 def delete_product(id):
+  if is_authenticated(request) and is_staff(request):
     products = dat_loader.load_data("Products")["data"]
     for product in products:
       if product.get_id() == id:
@@ -548,6 +598,7 @@ def delete_product(id):
 # Routing for Ticket System - customer/staff
 @app.route("/dashboard/support/")
 def get_tickets():
+  if is_authenticated(request):
     ticket_list = dat_loader.load_data("Tickets")["data"]
     user = get_user(request)
     results = []
@@ -573,11 +624,14 @@ def get_tickets():
           results.reverse()
       return render_template("pages/support_ticket.html", staff=is_staff(request), user=user, tickets=results,
                              closed=False)
+  else:
+    return redirect("/dashboard/support/")
 
 
 # Routing for Ticket system new - customer
 @app.route("/dashboard/ticket/new/", methods=["POST", "GET"])
 def new_ticket():
+  if is_authenticated(request) and not is_staff(request):
     form = NewTicketForm()
     if request.method == "GET":
       return render_template("pages/customer_pages/ticket_create.html", staff=is_staff(request), user=get_user(request), form=form)
@@ -601,11 +655,16 @@ def new_ticket():
       ticket_list.append(t_obj)
       dat_loader.write_data("Tickets", ticket_list)
       return redirect("/dashboard/support/")
+  elif is_authenticated(request) and is_staff(request):
+    return abort(403)
+  else:
+    return redirect("/login/")
 
 
 # Routing for Ticket detail - customer/staff
 @app.route("/dashboard/ticket/<int:id>/", methods=["POST", "GET"])
 def ticket_detail(id):
+  if is_authenticated(request):
     user = get_user(request)
     form = NewMessageForm()
     ticket_list = dat_loader.load_data("Tickets")["data"]
@@ -638,10 +697,13 @@ def ticket_detail(id):
           ticket.add_new_reply(m1)
           dat_loader.write_data("Tickets", ticket_list, False)
           return redirect(url_for("ticket_detail", id=ticket.get_id()))
+  else:
+    return redirect("/login/")
 
 # Supporting Ticket route - ticket close
 @app.route("/api-service/ticket/close/", methods=["POST"])
 def ticket_close():
+  if is_authenticated(request):
     data = request.json
     ticket_id = int(data["id"])
     ticket_list = dat_loader.load_data("Tickets")["data"]
@@ -650,13 +712,14 @@ def ticket_close():
         ticket.close()
     dat_loader.write_data("Tickets", ticket_list, False)
     return jsonify({"success":"true"})
-
+  else:
+    return abort(403)
 
 
 # Routing for Cart - customer
 @app.route("/dashboard/cart/")
 def view_cart():
-  if not is_staff(request):
+  if is_authenticated(request) and not is_staff(request):
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
     counter = 0
@@ -676,7 +739,7 @@ def view_cart():
 # Supporting Cart route - cart remove item
 @app.route("/api-service/cart/delete/", methods=["DELETE"])
 def cart_api_delete():
-  if not is_staff(request):
+  if is_authenticated(request) and not is_staff(request):
     json_dat = request.get_json(force=True)
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
@@ -695,7 +758,7 @@ def cart_api_delete():
 # Supporting Cart route - cart update
 @app.route("/api-service/cart/update/", methods=["POST"])
 def cart_api_update():
-  if not is_staff(request):
+  if is_authenticated(request) and not is_staff(request):
     json_dat = request.get_json(force=True)
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
@@ -719,7 +782,7 @@ def cart_api_update():
 @app.route("/api-service/cart/confirm/", methods=["POST"])
 def cart_api_confirm():
   domain_name = "http://127.0.0.1:5000"
-  if not is_staff(request):
+  if is_authenticated(request) and not is_staff(request):
     json_dat = request.get_json(force=True)
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
@@ -771,6 +834,7 @@ def cart_api_confirm():
 # Supporting Cart route - add to cart
 @app.route("/api-service/cart/add/", methods=["POST"])
 def cart_api_add():
+  if is_authenticated(request) and not is_staff(request):
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
     counter = 0
@@ -793,6 +857,7 @@ def cart_api_add():
 # Routing for Orders - customer
 @app.route("/dashboard/orders/")
 def view_orders():
+  if is_authenticated(request) and not is_staff(request):
     user = get_user(request)
     results = []
     order_list = dat_loader.load_data("Orders")["data"]
@@ -819,11 +884,14 @@ def view_orders():
           results.reverse()
     return render_template("pages/customer_pages/view_orders.html", orders=results, user=user,
                            delivered=delivered)
+  else:
+    return redirect("/login/")
 
 
 # Supporting Order route - create Order object upon successful payment
 @app.route("/api-service/payment/success/", methods=["GET"])
 def order_api_create():
+  if is_authenticated(request) and not is_staff(request):
     cart_list = dat_loader.load_data("Carts")["data"]
     user = get_user(request)
     counter = 0
@@ -861,11 +929,14 @@ def order_api_create():
         counter += 1
     if counter == len(cart_list):
       return abort(500)
+  else:
+    return abort(403)
 
 
 # Routing for Orders detail - customer
 @app.route("/dashboard/orders/<int:id>")
 def orders_detail(id):
+  if is_authenticated(request) and not is_staff(request):
     order_list = dat_loader.load_data("Orders")["data"]
     counter = 0
     for x in order_list:
@@ -875,6 +946,8 @@ def orders_detail(id):
         counter += 1
     if len(order_list) == counter:
       return abort(404)
+  else:
+    return redirect("/login/")
 
 
 # Corn jobs
@@ -888,6 +961,7 @@ def corn_jobs():
 # Routing for Reports
 @app.route("/dashboard/report/")
 def dashboard_report():
+    if is_authenticated(request) and is_staff(request):
         year_list = []
         profit_list = []
         total_profit = 0
@@ -957,12 +1031,10 @@ def dashboard_report():
                                values_3=values_3, labels_3=labels_3, legend_3=legend_3,
                                total_profit=total_profit, year_filter = year_filter
                                )
+    else:
+        return redirect("/login/")
 
-@app.route('/test')
-def unsafe():
-    first_name = request.args.get('name', '')
-    return make_response("Your name is " + first_name)
-#http://127.0.0.1/test?name=%3Cscript%3E%20alert(%22XSS%22);%20%3C/script%3E
+
 # function to parse obj id for display
 @app.context_processor
 def utility_processor():
@@ -971,4 +1043,4 @@ def utility_processor():
   return dict(format_id=format_id)
 
 if __name__ == "__main__":
-  app.run(debug=True,port=80)
+  app.run(debug=True)

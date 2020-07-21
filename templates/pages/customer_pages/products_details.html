@@ -1,16 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Eclectic Product Details {% endblock %}
 {% set active_page = "products" %}
-
 {% block scripts %}
   <script src="{{ url_for('static' , filename='js/product_details.js') }}"></script>
-<script src="{{ url_for('static' , filename='js/chatbot.js') }}"></script>
 {% endblock %}
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
-{% endblock %}
-
+{% block css %}{% endblock %}
 
 {% block navbar %}
 <!-- Logic to check logged in user and display relevant dashboard-->
@@ -70,5 +65,4 @@
 
     <br>
 </div>
-{% include 'includes/chatbot.html' %}
 {% endblock %}

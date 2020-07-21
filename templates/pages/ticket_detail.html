@@ -50,10 +50,10 @@
                             <div class="ownBubble own">
                                 <b>{{ message.sent_by.get_name() }}:</b>
                             {% if message.content is not none %}
-                              <p id="updateTicket_message">{{ message.content | safe }}</p>
+                              <p id="updateTicket_message">{{ message.content }}</p>
                             {% else %}
                               {% for file in message.get_files() %}
-                              <br><a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
+                              <a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
                               {% endfor %}
                             {% endif %}
                             </div>
@@ -66,10 +66,10 @@
                                 <div class="content">
                                     <b>{{ message.sent_by.get_name() }}:</b>
                               {% if message.content is not none %}
-                              <p id="updateTicket_message">{{ message.content | safe }}</p>
+                              <p id="updateTicket_message">{{ message.content }}</p>
                               {% else %}
                                 {% for file in message.get_files() %}
-                                <br><a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
+                                <a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
                                 {% endfor %}
                               {% endif %}
                                 </div>
@@ -84,10 +84,10 @@
                             <div class="ownBubble own">
                               <b>{{ message.sent_by.get_name() }}:</b>
                               {% if message.content is not none %}
-                              <p id="updateTicket_message">{{ message.content | safe}}</p>
+                              <p id="updateTicket_message">{{ message.content }}</p>
                               {% else %}
                                 {% for file in message.get_files() %}
-                                <br><a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
+                                <a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
                                 {% endfor %}
                               {% endif %}
                             </div>
@@ -100,10 +100,10 @@
                                 <div class="content">
                                     <b>{{ message.sent_by.get_name() }}:</b>
                                 {% if message.content is not none %}
-                                  <p id="updateTicket_message">{{ message.content | safe}}</p>
+                                  <p id="updateTicket_message">{{ message.content }}</p>
                                 {% else %}
                                   {% for file in message.get_files() %}
-                                  <br><a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
+                                  <a href="{{ file.get_link() }}" id="updateTicket_message" target="blank">{{ file.get_filename() }}</a>
                                   {% endfor %}
                                 {% endif %}
                                 </div>

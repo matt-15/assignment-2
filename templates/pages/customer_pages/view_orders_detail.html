@@ -1,15 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Eclectic Order Details {% endblock %}
 {% set active_page = "order" %}
+{% block scripts %}{% endblock %}
 
-{% block scripts %}
-<script src="{{ url_for('static' , filename='js/orders.js') }}"></script>
-<script src="{{ url_for('static' , filename='js/chatbot.js') }}"></script>
-{% endblock %}
-
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
-{% endblock %}
+{% block css %}{% endblock %}
 
 {% block navbar %}
 <!-- Logic to check logged in user and display relevant dashboard-->
@@ -141,7 +135,6 @@
     </div>
     <br>
 </div>
-{% include 'includes/chatbot.html' %}
 {% endblock %}
 
 

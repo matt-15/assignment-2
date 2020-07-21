@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Eclectic Products {% endblock %}
 {% set active_page = "products" %}
-{% block scripts %}
-<script src="{{ url_for('static' , filename='js/chatbot.js') }}"></script>
-{% endblock %}
+{% block scripts %}{% endblock %}
 
-{% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
-{% endblock %}
+{% block css %}{% endblock %}
 
 {% block navbar %}
     {% if staff %}
@@ -55,5 +51,4 @@
     {% endif %}
 
 </div>
-{% include 'includes/chatbot.html' %}
 {% endblock %}
