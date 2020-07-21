@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="21ac18e6-033e-4a26-8824-f68ddd53d96d" name="Default Changelist" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="21ac18e6-033e-4a26-8824-f68ddd53d96d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Eclectic.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Eclectic.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Eclectic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Eclectic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.bak" beforeDir="false" afterPath="$PROJECT_DIR$/data.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.dat" beforeDir="false" afterPath="$PROJECT_DIR$/data.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.dir" beforeDir="false" afterPath="$PROJECT_DIR$/data.dir" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,28 +24,25 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1TQQpe2gTaFfAKLedpPPqnCgYvO" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
-    <property name="settings.editor.selected.configurable" value="project.propDebugger" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dylan\Desktop\Eclectic\templates\pages\customer_pages" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.Eclectic">
     <configuration name="Eclectic" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -155,11 +160,63 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="21ac18e6-033e-4a26-8824-f68ddd53d96d" name="Default Changelist" comment="" />
+      <created>1595317901386</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1595317901386</updated>
+    </task>
+    <servers />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.css" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="420" y="98" key="FileChooserDialogImpl" timestamp="1595317975288">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="420" y="98" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1595317975288" />
+    <state width="1259" height="164" key="GridCell.Tab.0.bottom" timestamp="1595323790386">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="164" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1595323790386" />
+    <state width="1259" height="164" key="GridCell.Tab.0.center" timestamp="1595323790386">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="164" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1595323790386" />
+    <state width="1259" height="164" key="GridCell.Tab.0.left" timestamp="1595323790386">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="164" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1595323790386" />
+    <state width="1259" height="164" key="GridCell.Tab.0.right" timestamp="1595323790386">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="164" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1595323790386" />
+    <state x="144" y="0" key="SettingsEditor" timestamp="1595317992059">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="144" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1595317992059" />
+    <state x="349" y="168" key="com.intellij.ide.util.TipDialog" timestamp="1595321280329">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="349" y="168" key="com.intellij.ide.util.TipDialog/0.0.1280.680@0.0.1280.680" timestamp="1595321280329" />
   </component>
 </project>
