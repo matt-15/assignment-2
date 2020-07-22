@@ -1,6 +1,5 @@
 import string
-#import random
-import secrets
+import random
 import time
 
 class Pass_token:
@@ -8,7 +7,7 @@ class Pass_token:
     self.__id = 0
     self.__user = user_id
     char = string.ascii_letters + string.digits
-    self.__auth_token = ''.join(secrets.choice(char) for i in range(72))
+    self.__auth_token = ''.join(random.choice(char) for i in range(72))
     self.__expire = time.time() + 7200
     self.__active = True
 
@@ -31,7 +30,7 @@ class Session:
   def __init__(self, user_obj):
     self.__user = user_obj
     char = string.ascii_letters + string.digits
-    self.__id = ''.join(secrets.choice(char) for i in range(72))
+    self.__id = ''.join(random.choice(char) for i in range(72))
     self.__expire = time.time() + 1800
     self.__valid = True
 
