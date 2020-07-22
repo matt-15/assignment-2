@@ -105,8 +105,8 @@ def login():
           s_dat.append(s)
           dat_loader.write_data("Session", s_dat, False)
           resp = make_response(redirect("/dashboard/"))
-          resp.set_cookie("userID", str(user.get_id()))
-          resp.set_cookie("sessionID", s.get_id())
+          resp.set_cookie("userID", str(user.get_id()),httponly=True)
+          resp.set_cookie("sessionID", s.get_id(),httponly=True)
           return resp
         elif isinstance(user, Staff) and user.get_staff_id() == username and user.Check_password(password):
           s = Session(user)
@@ -114,8 +114,8 @@ def login():
           s_dat.append(s)
           dat_loader.write_data("Session", s_dat, False)
           resp = make_response(redirect("/dashboard/"))
-          resp.set_cookie("userID", str(user.get_id()))
-          resp.set_cookie("sessionID", s.get_id())
+          resp.set_cookie("userID", str(user.get_id()),httponly=True)
+          resp.set_cookie("sessionID", s.get_id(),httponly=True)
           return resp
         else:
           counter += 1
