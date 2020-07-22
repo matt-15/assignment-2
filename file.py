@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import load_helper as dat_loader
 from parsers import size_readable
 import os
-import random
+import secrets
 
 class File:
   def __init__(self, id, file_path):
@@ -70,7 +70,7 @@ def upload(f, public=True, uploaded_by=None):
       if os.path.exists(file_path):
         file_name = filename.rsplit(".")
         name = file_name[0]
-        name += str(random.randint(1, 1000))
+        name += str(secrets.randbelow(1000))
         new_f_name = [name, file_name[1]]
         new_filename = ".".join(new_f_name)
         file_path = os.path.join(upload_folder, new_filename)
