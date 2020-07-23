@@ -47,7 +47,7 @@
                     <br>
                 </div>
                 {% if product.stock != 0 %}
-                    <form method="post" action="/api-service/cart/add/" id="eclectic-add-cart">
+                    <form method="post" action="/api-service/cart/add/" id="eclectic-add-cart" enctype="multipart/form-data">
                       <div class="retail-price quantity">
                         <label>Quantity : &nbsp;</label>
                         <input type="number" name="quantity" min="1" max="{{ product.stock }}" oninvalid="InvalidMsg(this);" required>
@@ -55,7 +55,7 @@
                       <br>
                       <input type="hidden" name="id" value="{{ product.get_id() }}">
                       <input type="submit" class="product-detail-btn" name="cart" value="Add To Cart"></form>
-                    </form>
+                    <form>
                 {% else %}
                     <input type="submit" class="product-detail-btn" value="Currently Out of Stock" disabled></form>
                 {% endif %}
