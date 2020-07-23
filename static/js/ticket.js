@@ -1,12 +1,12 @@
 $(document).ready(function () {
   $("#eclectic-open-btn").click(function () {
-    window.location.href = "/dashboard/support/?closed=false";
+    window.location.href = encodeURIComponent("/dashboard/support/?closed=false");
   });
   $("#eclectic-closed-btn").click(function () {
-    window.location.href = "/dashboard/support/?closed=true";
+    window.location.href = encodeURIComponent("/dashboard/support/?closed=true");
   });
   $("#eclectic-all-btn").click(function () {
-    window.location.href = "/dashboard/support/";
+    window.location.href = encodeURIComponent("/dashboard/support/");
   });
   $("#eclectic-message-form").on("change","#messages-file" , function(){
     const file_list = $("#messages-file")[0].files;
