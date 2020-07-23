@@ -18,7 +18,7 @@ $(document).ready(function () {
                 icon: "success",
               })
                 .then(() => {
-                  window.location.href = "/dashboard/users/";
+                  window.location.href = encodeURIComponent("/dashboard/users/");
                 });
             }
           });
